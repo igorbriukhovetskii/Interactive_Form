@@ -42,6 +42,10 @@
     var IS_HIDDEN_CLASS = 'is-hidden';
 
 
+
+
+
+
     // var options = shirtColorsList.querySelectorAll('option');
     //
     // var unselect = function () {
@@ -72,14 +76,14 @@
      */
     var hideAllElements = function (collection) {
         [].forEach.call(collection, function (element) {
-            element.classList.toggle(IS_HIDDEN_CLASS, true);
+            element.classList.add(IS_HIDDEN_CLASS);
         });
         console.log('collection ' + collection + ' is hidden');
     };
 
     var showAllElements = function (collection) {
         [].forEach.call(collection, function (element) {
-            element.classList.toggle(IS_HIDDEN_CLASS, false);
+            element.classList.remove(IS_HIDDEN_CLASS);
             console.log(element + ' is shown');
         });
         console.log('collection ' + collection + ' is visible');
@@ -90,7 +94,8 @@
      * @param {Element} element
      */
     var hideElement = function (element) {
-        element.classList.toggle(IS_HIDDEN_CLASS, true);
+        console.log('hide element started');
+        element.classList.add(IS_HIDDEN_CLASS);
     };
 
     /**
@@ -98,7 +103,7 @@
      * @param {Element} htmlElement
      */
     var showElement = function (element) {
-        element.classList.toggle(IS_HIDDEN_CLASS, false);
+        element.classList.remove(IS_HIDDEN_CLASS);
     }
 
     /** Event handler for DOMContentLoaded event */
@@ -131,32 +136,79 @@
         }
     };
 
+    var currentNode = null;
+    // var nodeJSPuns = shirtColorsList.removeChild(jsPunsColorGroup);
+    // var nodeLoveJS = shirtColorsList.removeChild(loveJSColorGroup);
+
+    var allColors = shirtColorsList.querySelectorAll('optgroup');
+    console.log(allColors.length + ' all colors');
+
+    for (var i = 0, length = allColors.length; i < length; i++) {
+        console.log(allColors[i] + ' removed');
+        shirtColorsList.removeChild(allColors[i]);
+        console.log(allColors[i] + ' removed');
+    }
+
+
     /** Event handler for 'change' event on the list of T-shirt designs */
-    var onShirtDesignListChange = function () {
+    var onShirtDesignListChange = function (event) {
+
         if (shirtDesignList.value === 'Select Theme') {
             hideElement(shirtColorMenu);
         } else {
             showElement(shirtColorMenu);
             console.log('shirtDesignList.value is ' + shirtDesignList.value);
-            switch (shirtDesignList.value) {
+            switch (event.target.value) {
                 case 'js puns':
-                    console.log('js puns selected');
+                    //console.log('js puns selected');
                     //hideAllElements(loveJSColors);
-                    hideElement(loveJSColorGroup);
+                    //hideElement(loveJSColorGroup);
+                    //hideAllElements(loveJSColors);
+                    //console.log('optgroup love JS class is ' + loveJSColorGroup.className)
                     //showAllElements(jsPunsColors);
-                    showElement(jsPunsColorGroup)
+                    // showElement(jsPunsColorGroup)
+                    // showAllElements(jsPunsColors);
+                    // console.log('optgroup JS Puns class is ' + jsPunsColorGroup.className)
+                    if (!currentNode) {
+                        // nodeLoveJS = shirtColorsList.removeChild(loveJSColorGroup);
+                        currentNode = allColors[0];
+                        shirtColorsList.appendChild(currentNode);
+                    } else {
+                        shirtColorsList.removeChild(currentNode);
+                        currentNode = allColors[0];
+                        shirtColorsList.appendChild(currentNode);
+                    }
+                    // if (shirtColorsList.hasChildNodes()) {
+                    //     console.log('HAS NODES')
+                    //     //nodeLoveJS = shirtColorsList.removeChild(loveJSColorGroup);
+                    // }
+                    // var nodeJSPuns = shirtColorsList.removeChild(jsPunsColorGroup);
+                    // var nodeLoveJS = shirtColorsList.removeChild(loveJSColorGroup);
+                    // shirtColorsList.appendChild(nodeJSPuns);
                     selectFirstOption(jsPunsColors);
                     // remove(shirtColorsList, loveJSColors);
                     // add(jsPunsColors);
                     // showElement(jsPunsColors);
                     break;
                 case 'heart js':
-                    console.log('heart js selected');
-                    //hideAllElements(jsPunsColors);
-                    hideElement(jsPunsColorGroup);
-                    //showAllElements(loveJSColors);
-                    showElement(loveJSColorGroup);
-                    selectFirstOption(loveJSColors);
+                    // if (shirtColorsList.hasChildNodes()) {
+                    //     //nodeJSPuns = shirtColorsList.removeChild(jsPunsColorGroup);
+                    // }
+                    if (!currentNode) {
+                        currentNode = allColors[1];
+                        shirtColorsList.appendChild(currentNode);
+                    } else {
+                        shirtColorsList.removeChild(currentNode);
+                        currentNode = allColors[1];
+                        shirtColorsList.appendChild(currentNode);
+                    }
+                    // shirtColorsList.appendChild(nodeLoveJS);
+                    // console.log('heart js selected');
+                    // hideAllElements(jsPunsColors);
+                    // hideElement(jsPunsColorGroup);
+                    // showAllElements(loveJSColors);
+                    // showElement(loveJSColorGroup);
+                    // selectFirstOption(loveJSColors);
                     break;
             }
         }
@@ -169,5 +221,5 @@
     jobRolesList.addEventListener('change', onJobRolesListChange);
 
     /** Adding an event listener for 'change' event on the list of T-shirt designs */
-    shirtDesignList.addEventListener('change', onShirtDesignListChange);
+    shirtDesignList.addEventListener('click', onShirtDesignListChange);
 })();
