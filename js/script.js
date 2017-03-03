@@ -9,16 +9,97 @@
     var nameField = registrationForm.querySelector('#name');
 
     /** List of job roles */
-    var jobSelect = registrationForm.querySelector('#title');
+    var jobRolesList = registrationForm.querySelector('#title');
 
     /** 'Other' option in list of job roles */
-    var otherJobRole = registrationForm.querySelector('option[value=other]');
+    var otherJobRole = registrationForm.querySelector('option[value="other"]');
 
     /** Job Role text input field */
     var otherField = registrationForm.querySelector('#other-title');
 
+    /** List of possible T-shirt designs */
+    var shirtDesignList = registrationForm.querySelector('#design');
+
+    /** 'Color' menu */
+    var  shirtColorMenu = registrationForm.querySelector('#colors-js-puns');
+
+    /** List of possible T-shirt colors */
+    var shirtColorsList = shirtColorMenu.querySelector('#color');
+
+    /** Group of colors for JS Puns design */
+    var jsPunsColorGroup = shirtColorsList.querySelector('optgroup[label^="JS"]');
+
+    /** Group of colors for I love JS design */
+    var loveJSColorGroup = shirtColorsList.querySelector('optgroup[label^="I"]');
+
+    /** List of colors for the 'JS Puns' theme */
+    var jsPunsColors = jsPunsColorGroup.querySelectorAll('.puns');
+
+    /** List of colors for the 'I love JS' theme */
+    var loveJSColors = loveJSColorGroup.querySelectorAll('.heart');
+
     /** CSS class for hide an HTML element */
     var IS_HIDDEN_CLASS = 'is-hidden';
+
+
+    // var options = shirtColorsList.querySelectorAll('option');
+    //
+    // var unselect = function () {
+    //   [].forEach.call(options, function (option) {
+    //       option.selected = false;
+    //   });
+    // };
+
+    /**
+     * Function selects first option in a list
+     * @param {Collection} list
+     */
+    var selectFirstOption = function (list) {
+        list[0].selected = true;
+    };
+
+    // var remove = function (collection, child) {
+    //   collection.removeChild(child);
+    // };
+    //
+    // var add = function (nod, child) {
+    //     nod.appendChild(child);
+    // };
+
+    /**
+     * Function hides all elements in the selected collection
+     * @param {Collection} collection
+     */
+    var hideAllElements = function (collection) {
+        [].forEach.call(collection, function (element) {
+            element.classList.toggle(IS_HIDDEN_CLASS, true);
+        });
+        console.log('collection ' + collection + ' is hidden');
+    };
+
+    var showAllElements = function (collection) {
+        [].forEach.call(collection, function (element) {
+            element.classList.toggle(IS_HIDDEN_CLASS, false);
+            console.log(element + ' is shown');
+        });
+        console.log('collection ' + collection + ' is visible');
+    };
+
+    /**
+     * Function hides DOM element
+     * @param {Element} element
+     */
+    var hideElement = function (element) {
+        element.classList.toggle(IS_HIDDEN_CLASS, true);
+    };
+
+    /**
+     * Function shows hidden DOM elements
+     * @param {Element} htmlElement
+     */
+    var showElement = function (element) {
+        element.classList.toggle(IS_HIDDEN_CLASS, false);
+    }
 
     /** Event handler for DOMContentLoaded event */
     var onFormLoad = function () {
@@ -26,18 +107,58 @@
         nameField.focus();
 
         /** Hiding 'Your Job Role' text input field */
-        otherField.classList.toggle(IS_HIDDEN_CLASS, true);
+        hideElement(otherField);
+
+        /** Hiding 'Color' menu in 'T-shirt info' section */
+        hideElement(shirtColorMenu);
+
+        /** Selecting default choice for the list of shirt designs */
+        selectFirstOption(shirtDesignList);
+
+        /** Hiding color themes in 'Color' menu */
+        //hideAllElements(shirtColorGroups);
     };
 
-    /** Event handler for 'change' event on list of job roles */
-    var onJobSelectChange = function () {
+    /** Event handler for 'change' event on the list of job roles */
+    var onJobRolesListChange = function () {
         /** Show/hide 'Your Job Role' text input field */
         switch (otherJobRole.selected) {
-            case true: otherField.classList.toggle(IS_HIDDEN_CLASS, false);
+            case true: showElement(otherField);
             break;
-            case false: otherField.classList.toggle(IS_HIDDEN_CLASS, true);
+            case false: hideElement(otherField);
             break;
-            default: otherField.classList.toggle(IS_HIDDEN_CLASS, true);
+            default: showElement(otherField);
+        }
+    };
+
+    /** Event handler for 'change' event on the list of T-shirt designs */
+    var onShirtDesignListChange = function () {
+        if (shirtDesignList.value === 'Select Theme') {
+            hideElement(shirtColorMenu);
+        } else {
+            showElement(shirtColorMenu);
+            console.log('shirtDesignList.value is ' + shirtDesignList.value);
+            switch (shirtDesignList.value) {
+                case 'js puns':
+                    console.log('js puns selected');
+                    //hideAllElements(loveJSColors);
+                    hideElement(loveJSColorGroup);
+                    //showAllElements(jsPunsColors);
+                    showElement(jsPunsColorGroup)
+                    selectFirstOption(jsPunsColors);
+                    // remove(shirtColorsList, loveJSColors);
+                    // add(jsPunsColors);
+                    // showElement(jsPunsColors);
+                    break;
+                case 'heart js':
+                    console.log('heart js selected');
+                    //hideAllElements(jsPunsColors);
+                    hideElement(jsPunsColorGroup);
+                    //showAllElements(loveJSColors);
+                    showElement(loveJSColorGroup);
+                    selectFirstOption(loveJSColors);
+                    break;
+            }
         }
     };
 
@@ -45,5 +166,8 @@
     document.addEventListener('DOMContentLoaded', onFormLoad);
 
     /** Adding an event listener for 'change' event on the list of job roles */
-    jobSelect.addEventListener('change', onJobSelectChange);
+    jobRolesList.addEventListener('change', onJobRolesListChange);
+
+    /** Adding an event listener for 'change' event on the list of T-shirt designs */
+    shirtDesignList.addEventListener('change', onShirtDesignListChange);
 })();
