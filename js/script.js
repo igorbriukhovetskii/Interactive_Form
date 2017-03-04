@@ -32,6 +32,33 @@
     /** A collection of colors for all T-shirts designs */
     var allColors = shirtColorsList.querySelectorAll('optgroup');
 
+    /** The list of activities */
+    var activitiesList = registrationForm.querySelector('.activities');
+
+    /** The collection of activities */
+    var activities = activitiesList.querySelectorAll('input');
+
+    /** The total price for all activities selected */
+    var totalPrice = 0;
+
+    /** The counter displaying running total for activities */
+    var totalCounter = null;
+    /**--------------------------------------------------------------------------------------------------*/
+    /**--------------------------------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+    /**---------------------------------------------------------------------------------------------------*/
+
     /** CSS class for hide an HTML element */
     var IS_HIDDEN_CLASS = 'is-hidden';
 
@@ -59,6 +86,22 @@
         element.classList.remove(IS_HIDDEN_CLASS);
     };
 
+    /** Function counts a running total for activities */
+    var countActivitiesTotalPrice = function () {
+        var price = 0;
+        totalPrice = 0;
+        [].forEach.call(activities, function (activity) {
+            price = activity.parentNode.innerText;
+            price = price.match(/\d{2,5}$/);
+            price = parseInt(price, 10);
+            if (activity.checked === true) {
+                totalPrice += price;
+            }
+            totalCounter.innerText = '';
+            totalCounter.innerText = 'Total: ' + totalPrice + '$';
+        });
+    };
+
     /** Event handler for DOMContentLoaded event */
     var onFormLoad = function () {
         /** Setting focus on the first text field */
@@ -79,6 +122,11 @@
         /** Removing all available colors set for T-shirts */
         removeAllShirtColors(allColors, shirtColorsList);
 
+        /** Creating a counter that will display the running total in activities section */
+        createTotalCounter();
+
+        /** Initializing activities total price counter */
+        countActivitiesTotalPrice();
     };
 
     /** Event handler for 'change' event on the list of job roles */
@@ -136,6 +184,13 @@
         }
     };
 
+    /** Function creates new <div> element for running total counter */
+    var createTotalCounter = function () {
+        totalCounter = document.createElement('div');
+        activitiesList.appendChild(totalCounter);
+        totalCounter.style.marginLeft = '24px';
+    };
+
     /** Adding an event listener for DOMContentLoaded event */
     document.addEventListener('DOMContentLoaded', onFormLoad);
 
@@ -144,4 +199,10 @@
 
     /** Adding an event listener for 'change' event on the list of T-shirt designs */
     shirtDesignList.addEventListener('change', onShirtDesignListChange);
+
+
+    /** Adding an event listener for 'change' event on the list of available activities */
+    activitiesList.addEventListener('change', function () {
+        countActivitiesTotalPrice();
+    });
 })();
