@@ -86,20 +86,33 @@
         element.classList.remove(IS_HIDDEN_CLASS);
     };
 
+    /** An array of activities prices */
+    var activitiesPrices = [];
+
+    /** Function gets the prices for activities from HTML */
+    var getActivitiesPrices = function () {
+      [].forEach.call(activities, function (activity, i) {
+          activitiesPrices[i] = activity.parentNode.innerText;
+          activitiesPrices[i] = activitiesPrices[i].match(/\d{2,5}$/);
+          activitiesPrices[i] = parseInt(activitiesPrices[i], 10);
+      })
+    };
+
     /** Function counts a running total for activities */
     var countActivitiesTotalPrice = function () {
         var price = 0;
         totalPrice = 0;
-        [].forEach.call(activities, function (activity) {
-            price = activity.parentNode.innerText;
-            price = price.match(/\d{2,5}$/);
-            price = parseInt(price, 10);
-            if (activity.checked === true) {
-                totalPrice += price;
-            }
-            totalCounter.innerText = '';
-            totalCounter.innerText = 'Total: ' + totalPrice + '$';
+
+        [].forEach.call(activities, function (activity, i) {
+           if (activity.checked === true) {
+               console.log(activitiesPrices[i]);
+               price += activitiesPrices[i];
+           }
         });
+
+        totalPrice = price;
+        totalCounter.innerText = '';
+        totalCounter.innerText = 'Total: ' + totalPrice + '$';
     };
 
     /** Event handler for DOMContentLoaded event */
@@ -124,6 +137,9 @@
 
         /** Creating a counter that will display the running total in activities section */
         createTotalCounter();
+
+        /** Getting all the prices for activities */
+        getActivitiesPrices();
 
         /** Initializing activities total price counter */
         countActivitiesTotalPrice();
