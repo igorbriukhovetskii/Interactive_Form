@@ -43,8 +43,25 @@
 
     /** The counter displaying running total for activities */
     var totalCounter = null;
+
+    /** The payment info section of the form */
+    var paymentInfo = registrationForm.querySelector('#payment_info');
+
+    /** A list of payment methods */
+    var paymentSelect = paymentInfo.querySelector('#payment');
+
+    /** A credit card section */
+    var creditCardInfo = paymentInfo.querySelector('#credit-card');
+
+    /** The PayPal section */
+    var payPal = paymentInfo.querySelector('#paypal');
+
+    /** The Bitcoin section*/
+    var bitCoin = paymentInfo.querySelector('#bitcoin');
     /**--------------------------------------------------------------------------------------------------*/
     /**--------------------------------------------------------------------------------------------------*/
+
+
 
 
     /**---------------------------------------------------------------------------------------------------*/
@@ -53,11 +70,12 @@
     var IS_HIDDEN_CLASS = 'is-hidden';
 
     /**
-     * Function selects first option in a list
+     * Function selects default option in a list
      * @param {Node} list
+     * @param {number} index
      */
-    var selectFirstOption = function (list) {
-        list[0].selected = true;
+    var selectDefaultOption = function (list, index) {
+        list[index].selected = true;
     };
 
     /**
@@ -142,6 +160,30 @@
         });
     };
 
+    /** Function changes displayed info in the 'Payment Method' section */
+    var onPaymentSelectChange = function () {
+        switch (paymentSelect.value) {
+            case 'credit card':
+                showElement(creditCardInfo);
+                hideElement(payPal);
+                hideElement(bitCoin);
+                break;
+            case 'paypal':
+                showElement(payPal);
+                hideElement(creditCardInfo);
+                hideElement(bitCoin);
+                break;
+            case 'bitcoin':
+                showElement(bitCoin);
+                hideElement(creditCardInfo);
+                hideElement(payPal);
+                break;
+            default:
+                hideElement(creditCardInfo);
+                hideElement(payPal);
+                hideElement(bitCoin);
+        }
+    };
     /** Event handler for DOMContentLoaded event */
     var onFormLoad = function () {
         /** Setting focus on the first text field */
@@ -151,13 +193,13 @@
         hideElement(otherField);
 
         /** Selecting default choice for 'Job Role' menu */
-        selectFirstOption(jobRolesList);
+        selectDefaultOption(jobRolesList, 0);
 
         /** Hiding 'Color' menu in 'T-shirt info' section */
         hideElement(shirtColorMenu);
 
         /** Selecting default choice for the list of shirt designs */
-        selectFirstOption(shirtDesignList);
+        selectDefaultOption(shirtDesignList, 0);
 
         /** Removing all available colors set for T-shirts */
         removeAllShirtColors(allColors, shirtColorsList);
@@ -173,6 +215,9 @@
 
         /** Deselect all the checkboxes in 'Register for Activities' section */
         resetActivities();
+
+        /** Selecting default option in the 'Payment Method' section */
+        selectDefaultOption(paymentSelect, 1);
     };
 
     /** Event handler for 'change' event on the list of job roles */
@@ -250,11 +295,12 @@
     /** Adding an event listener for 'change' event on the list of available activities */
     activitiesList.addEventListener('change', function () {
         countActivitiesTotalPrice();
-
     });
 
     /** Adding an event listener for 'change' event on the activities checkboxes */
     [].forEach.call(activities, function (activity) {
        activity.addEventListener('change', disableConflictingActivities);
     });
+
+    paymentSelect.addEventListener('change', onPaymentSelectChange);
 })();
