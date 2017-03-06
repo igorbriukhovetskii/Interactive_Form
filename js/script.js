@@ -32,6 +32,23 @@
     /** A collection of colors for all T-shirts designs */
     var allColors = shirtColorsList.querySelectorAll('optgroup');
 
+    /** The list of activities */
+    var activitiesList = registrationForm.querySelector('.activities');
+
+    /** The collection of activities */
+    var activities = activitiesList.querySelectorAll('input');
+
+    /** The total price for all activities selected */
+    var totalPrice = 0;
+
+    /** The counter displaying running total for activities */
+    var totalCounter = null;
+    /**--------------------------------------------------------------------------------------------------*/
+    /**--------------------------------------------------------------------------------------------------*/
+
+
+    /**---------------------------------------------------------------------------------------------------*/
+
     /** CSS class for hide an HTML element */
     var IS_HIDDEN_CLASS = 'is-hidden';
 
@@ -59,6 +76,72 @@
         element.classList.remove(IS_HIDDEN_CLASS);
     };
 
+    /** An array of activities prices */
+    var activitiesPrices = [];
+
+    /** Function gets the prices for activities from HTML */
+    var getActivitiesPrices = function () {
+      [].forEach.call(activities, function (activity, i) {
+          activitiesPrices[i] = activity.parentNode.innerText;
+          activitiesPrices[i] = activitiesPrices[i].match(/\d{2,5}$/);
+          activitiesPrices[i] = parseInt(activitiesPrices[i], 10);
+      });
+    };
+
+    /** Function counts a running total for activities */
+    var countActivitiesTotalPrice = function () {
+        var price = 0;
+        
+        [].forEach.call(activities, function (activity, i) {
+           if (activity.checked === true) {
+               price += activitiesPrices[i];
+           }
+        });
+
+        totalPrice = price;
+        totalCounter.innerText = '';
+        totalCounter.innerText = 'Total: ' + totalPrice + '$';
+    };
+
+    /** Function deselects all the checkboxes*/
+    var resetActivities = function () {
+        [].forEach.call(activities, function (activity) {
+            activity.checked = false;
+        });
+    };
+
+    /**
+     * Function finds the day of the week and scheduled time for an activity
+     * @param {string} text - the full text in a <label> element
+     * @return {string} - a day of the week and scheduled time for an activity
+     */
+    var getActivityTime = function (text) {
+        return String(text.match(/[A-Z,a-z]{1,6}day\s\d{1,2}[apm]{2}/));
+    };
+
+    /** Function finds and disables the activities that conflict with the one that we have chose */
+    var disableConflictingActivities = function (event) {
+        var target = event.target;
+        var activityTime = getActivityTime(target.parentNode.innerText);
+
+        [].forEach.call(activities, function (activity) {
+            var label = activity.parentNode;
+
+            if (activity !== target && label.innerText.indexOf(activityTime) !== -1) {
+                switch (activity.disabled) {
+                    case true:
+                        activity.disabled = false;
+                        label.style.opacity = '1';
+                        break;
+                    case false:
+                        activity.disabled = true;
+                        label.style.opacity = '0.2';
+                        break;
+                }
+            }
+        });
+    };
+
     /** Event handler for DOMContentLoaded event */
     var onFormLoad = function () {
         /** Setting focus on the first text field */
@@ -79,6 +162,17 @@
         /** Removing all available colors set for T-shirts */
         removeAllShirtColors(allColors, shirtColorsList);
 
+        /** Creating a counter that will display the running total in activities section */
+        createTotalCounter();
+
+        /** Getting all the prices for activities */
+        getActivitiesPrices();
+
+        /** Initializing activities total price counter */
+        countActivitiesTotalPrice();
+
+        /** Deselect all the checkboxes in 'Register for Activities' section */
+        resetActivities();
     };
 
     /** Event handler for 'change' event on the list of job roles */
@@ -136,6 +230,13 @@
         }
     };
 
+    /** Function creates new <div> element for running total counter */
+    var createTotalCounter = function () {
+        totalCounter = document.createElement('div');
+        activitiesList.appendChild(totalCounter);
+        totalCounter.style.marginLeft = '24px';
+    };
+
     /** Adding an event listener for DOMContentLoaded event */
     document.addEventListener('DOMContentLoaded', onFormLoad);
 
@@ -144,4 +245,16 @@
 
     /** Adding an event listener for 'change' event on the list of T-shirt designs */
     shirtDesignList.addEventListener('change', onShirtDesignListChange);
+
+
+    /** Adding an event listener for 'change' event on the list of available activities */
+    activitiesList.addEventListener('change', function () {
+        countActivitiesTotalPrice();
+
+    });
+
+    /** Adding an event listener for 'change' event on the activities checkboxes */
+    [].forEach.call(activities, function (activity) {
+       activity.addEventListener('change', disableConflictingActivities);
+    });
 })();
