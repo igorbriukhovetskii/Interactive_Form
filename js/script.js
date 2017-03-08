@@ -1,4 +1,3 @@
-/** Using IIFE for encapsulation purposes, just like if it was an independent form module */
 (function () {
     'use strict';
 
@@ -8,14 +7,8 @@
     /** Name input text field */
     var nameField = registrationForm.querySelector('#name');
 
-    /** A label for the name input text field */
-    var nameFieldLabel = registrationForm.querySelector('label[for="name"]');
-
     /** Email input text field */
     var emailField = registrationForm.querySelector('#mail');
-
-    /** A label for the email input text field */
-    var emailFieldLabel = registrationForm.querySelector('label[for="mail"');
 
     /** List of job roles */
     var jobRolesList = registrationForm.querySelector('#title');
@@ -44,9 +37,6 @@
     /** The list of activities */
     var activitiesList = registrationForm.querySelector('.activities');
 
-    /** The list of activities' header */
-    var activitiesListHeader = activitiesList.querySelector('legend');
-
     /** The collection of activities */
     var activities = activitiesList.querySelectorAll('input');
 
@@ -65,211 +55,15 @@
     /** A credit card section */
     var creditCardInfo = paymentInfo.querySelector('#credit-card');
 
-    /** A credit card number input text field */
+    /** Credit card number input text field */
     var creditCardNumberField = creditCardInfo.querySelector('#cc-num');
-
-    /** A label for the 'Credit Card' input field */
-    var creditCardNumberFieldLabel = creditCardInfo.querySelector('label[for="cc-num"]');
-
-    /** 'CVV' input field */
-    var cvvField = creditCardInfo.querySelector('#cvv');
-
-    /** A label for 'cvv' input field*/
-    var cvvFieldLabel = creditCardInfo.querySelector('label[for="cvv"]');
-
-    /** 'ZIP Code' input field */
-    var zipField = creditCardInfo.querySelector('#zip');
-
-    /** A label for 'ZIP Code' input field */
-    var  zipFieldLabel = creditCardInfo.querySelector('label[for="zip"]');
 
     /** The PayPal section */
     var payPal = paymentInfo.querySelector('#paypal');
 
     /** The Bitcoin section*/
     var bitCoin = paymentInfo.querySelector('#bitcoin');
-    /**--------------------------------------------------------------------------------------------------*/
-    /**--------------------------------------------------------------------------------------------------*/
-    var errors = [0, 0, 0, 0, 0, 1];
-
-    var checkErrors = function () {
-        errors.forEach(function (error) {
-            if (error !== null) {
-                console.log('returned true');
-                return true;
-            }
-        });
-    };
-
-    var showErrorIndication = function (input, inputLabel, errorMessage) {
-        inputLabel.innerText = errorMessage;
-        inputLabel.style.color = 'red';
-        input.style.outline = '3px solid red';
-    };
-
-    var hideErrorIndication = function (input, inputLabel, defaultText) {
-        inputLabel.innerText = defaultText;
-        inputLabel.style.color = 'black';
-        input.style.outline = 'none'
-    };
-
-    var nameFieldRealTimeValidation = function () {
-        console.log('Name validation fired');
-        if (nameField.value.length === 0) {
-            showErrorIndication(nameField, nameFieldLabel, 'Name field is empty');
-            errors[0] = 1;
-            console.log('error set to ' + errors[0]);
-            return;
-        }
-
-        if (nameField.value.length > 0 && nameField.value.length <= 3) {
-            showErrorIndication(nameField, nameFieldLabel, 'Name is too short');
-            errors[0] = 1;
-            return;
-        }
-
-        if (nameField.value.match(/\d/) !== null) {
-            showErrorIndication(nameField, nameFieldLabel, 'Wrong name format (no digits accepted)');
-            errors[0] = 1;
-        } else {
-           hideErrorIndication(nameField, nameFieldLabel, 'Name');
-            errors[0] = 0;
-            console.log('error set to ' + errors[0]);
-        }
-    };
-
-    var emailFieldRealTimeValidation = function () {
-        if (emailField.value.length === 0) {
-            showErrorIndication(emailField, emailFieldLabel, 'Email field is empty');
-            errors[1] = 1;
-            return;
-        }
-        if (emailField.value.indexOf('@') === -1 || emailField.value.match(/\.\D{2,4}$/) === null) {
-            showErrorIndication(emailField, emailFieldLabel, 'Email: (please provide a valid email address)');
-            errors[1] = 1;
-        } else {
-            hideErrorIndication(emailField, emailFieldLabel, 'Email:');
-            errors[1] = 0;
-        }
-    };
-
-    var creditCardNumberFieldRealTimeValidation = function () {
-        if (creditCardNumberField.value.length < 13 || creditCardNumberField.value.length > 16){
-            showErrorIndication(creditCardNumberField, creditCardNumberFieldLabel, 'Card number must be 13-16 digits length');
-            errors[2] = 1;
-            return;
-        }
-        if (creditCardNumberField.value.search(/\D/) !== -1) {
-            showErrorIndication(creditCardNumberField, creditCardNumberFieldLabel, 'Invalid card number (only digits accepted)');
-            errors[2] = 1;
-        } else {
-            hideErrorIndication(creditCardNumberField, creditCardNumberFieldLabel, 'Card Number:');
-            errors[2] = 0;
-      }
-    };
-
-    var zipFieldRealTimeValidation = function () {
-        if (zipField.value.length === 0) {
-            showErrorIndication(zipField, zipFieldLabel, 'Zip field is empty');
-            errors[3] = 1;
-            return;
-        }
-        if (zipField.value.search(/\D/) !== -1) {
-            showErrorIndication(zipField, zipFieldLabel, 'Invalid Zip');
-            errors[3] = 1;
-            return;
-        }
-        if (zipField.value.length !== 5) {
-            showErrorIndication(zipField, zipFieldLabel, 'Zip must be 5 digits');
-            errors[3] = 1;
-        } else {
-            hideErrorIndication(zipField, zipFieldLabel, 'Zip Code:');
-            errors[3] = 0;
-        }
-    };
-
-    var cvvFieldRealTimeValidation = function () {
-        if (cvvField.value.length === 0) {
-            showErrorIndication(cvvField, cvvFieldLabel, 'CVV field is empty');
-            errors[4] = 1;
-            return;
-        }
-        if (cvvField.value.length < 3 || cvvField.value.search(/\D/) !== -1) {
-            showErrorIndication(cvvField, cvvFieldLabel, 'Invalid CVV');
-            errors[4] = 1;
-        } else {
-            hideErrorIndication(cvvField, cvvFieldLabel, 'CVV:');
-            errors[4] = 0;
-        }
-    };
-
-    var activitiesRealTimeValidation = function () {
-        for (var i = 0; i < activities.length; i++) {
-            if (activities[i].checked === true) {
-                activitiesListHeader.innerText = 'Register for Activities';
-                activitiesListHeader.style.color = 'inherit';
-                errors[5] = 0;
-                return;
-            } else {
-                activitiesListHeader.innerText = 'Please select at least one activity';
-                activitiesListHeader.style.color = 'red';
-                errors[5] = 1;
-            }
-        }
-    };
-
-    var validation = function (event) {
-        event.preventDefault();
-        nameFieldRealTimeValidation();
-        emailFieldRealTimeValidation();
-        creditCardNumberFieldRealTimeValidation();
-        cvvFieldRealTimeValidation();
-        zipFieldRealTimeValidation();
-        activitiesRealTimeValidation();
-        console.log(errors[0], errors[1], errors[2], errors[3], errors[4]);
-        //console.log(checkErrors());
-        if (errors[0] === 0 && errors[1] === 0 && errors[2] === 0 && errors[3] === 0 && errors[4] === 0) {
-            registrationForm.submit();
-        }
-    };
-    /**---------------------------------------------------------------------------------------------------*/
-
-    /** CSS class for hide an HTML element */
-    var IS_HIDDEN_CLASS = 'is-hidden';
-
-    /**
-     * Function selects default option in a list
-     * @param {Node} list
-     * @param {number} index
-     */
-    var selectDefaultOption = function (list, index) {
-        list[index].selected = true;
-    };
-
-    /**
-     * Function clears the input field
-     * @param {Element} input
-     */
-    var clearTextInputField = function (input) {
-        input.value = '';
-    };
-
-    /**
-     * Function hides DOM element
-     * @param {Node} element
-     */
-    var hideElement = function (element) {
-        element.classList.add(IS_HIDDEN_CLASS);
-    };
-
-    /**
-     * Function shows hidden DOM elements
-     * @param {Node} element
-     */
-    var showElement = function (element) {
-        element.classList.remove(IS_HIDDEN_CLASS);
-    };
-
+    
     /** An array of activities prices */
     var activitiesPrices = [];
 
@@ -340,48 +134,52 @@
     var onPaymentSelectChange = function () {
         switch (paymentSelect.value) {
             case 'credit card':
-                showElement(creditCardInfo);
-                hideElement(payPal);
-                hideElement(bitCoin);
+                window.utils.showElement(creditCardInfo);
+                window.utils.hideElement(payPal);
+                window.utils.hideElement(bitCoin);
                 break;
             case 'paypal':
-                showElement(payPal);
-                hideElement(creditCardInfo);
-                hideElement(bitCoin);
+                window.utils.showElement(payPal);
+                window.utils.hideElement(creditCardInfo);
+                window.utils.hideElement(bitCoin);
                 break;
             case 'bitcoin':
-                showElement(bitCoin);
-                hideElement(creditCardInfo);
-                hideElement(payPal);
+                window.utils.showElement(bitCoin);
+                window.utils.hideElement(creditCardInfo);
+                window.utils.hideElement(payPal);
                 break;
             default:
-                hideElement(creditCardInfo);
-                hideElement(payPal);
-                hideElement(bitCoin);
+                window.utils.hideElement(creditCardInfo);
+                window.utils.hideElement(payPal);
+                window.utils.hideElement(bitCoin);
         }
     };
+
     /** Event handler for DOMContentLoaded event */
     var onFormLoad = function () {
         /** Setting focus on the first text field */
         nameField.focus();
 
         /** Clear the 'Name' field */
-        clearTextInputField(nameField);
+        window.utils.clearInput(nameField);
 
         /** Clear the 'Email' field */
-        clearTextInputField(emailField);
+        window.utils.clearInput(emailField);
+        
+        /** Clear the 'Credit Card Number' field */
+        window.utils.clearInput(creditCardNumberField);
 
         /** Hiding 'Your Job Role' text input field */
-        hideElement(otherField);
+        window.utils.hideElement(otherField);
 
         /** Selecting default choice for 'Job Role' menu */
-        selectDefaultOption(jobRolesList, 0);
+        window.utils.selectDefault(jobRolesList, 0);
 
         /** Hiding 'Color' menu in 'T-shirt info' section */
-        hideElement(shirtColorMenu);
+        window.utils.hideElement(shirtColorMenu);
 
         /** Selecting default choice for the list of shirt designs */
-        selectDefaultOption(shirtDesignList, 0);
+        window.utils.selectDefault(shirtDesignList, 0);
 
         /** Removing all available colors set for T-shirts */
         removeAllShirtColors(allColors, shirtColorsList);
@@ -399,22 +197,21 @@
         resetActivities();
 
         /** Selecting default option in the 'Payment Method' section */
-        selectDefaultOption(paymentSelect, 1);
-
-        nameFieldRealTimeValidation();
-
-        console.log(errors[0], errors[1], errors[2], errors[3], errors[4]);
+        window.utils.selectDefault(paymentSelect, 1);
+        
+        /** Initializing real-time validation for the 'Name' field */ 
+       // nameFieldRealTimeValidation();
     };
 
     /** Event handler for 'change' event on the list of job roles */
     var onJobRolesListChange = function () {
         /** Show/hide 'Your Job Role' text input field */
         switch (otherJobRole.selected) {
-            case true: showElement(otherField);
+            case true: window.utils.showElement(otherField);
             break;
-            case false: hideElement(otherField);
+            case false: window.utils.hideElement(otherField);
             break;
-            default: showElement(otherField);
+            default: window.utils.showElement(otherField);
         }
     };
 
@@ -452,10 +249,10 @@
     var onShirtDesignListChange = function (event) {
         /** If no color theme selected - 'Colors' menu is hidden */
         if (shirtDesignList.value === 'Select Theme') {
-            hideElement(shirtColorMenu);
+            window.utils.hideElement(shirtColorMenu);
         } else {
             /** Showing 'Colors' menu */
-            showElement(shirtColorMenu);
+            window.utils.showElement(shirtColorMenu);
             /** Choosing and appending a list of colors for the selected T-shirt theme */
             selectShirtColor(event);
         }
@@ -477,11 +274,9 @@
     /** Adding an event listener for 'change' event on the list of T-shirt designs */
     shirtDesignList.addEventListener('change', onShirtDesignListChange);
 
-
     /** Adding an event listener for 'change' event on the list of available activities */
     activitiesList.addEventListener('change', function () {
         countActivitiesTotalPrice();
-        activitiesRealTimeValidation();
     });
 
     /** Adding an event listener for 'change' event on the activities checkboxes */
@@ -491,15 +286,6 @@
 
     paymentSelect.addEventListener('change', onPaymentSelectChange);
 
-    nameField.addEventListener('keyup', nameFieldRealTimeValidation);
-
-    emailField.addEventListener('keyup', emailFieldRealTimeValidation);
-
-    creditCardInfo.addEventListener('keyup', function () {
-        creditCardNumberFieldRealTimeValidation();
-        zipFieldRealTimeValidation();
-        cvvFieldRealTimeValidation();
-    });
-
-    registrationForm.addEventListener('submit', validation);
+    /** Starting validity checks for the form */
+    window.initializeValidation();
 })();
