@@ -24,7 +24,7 @@
 
     /** 'Color' menu */
     var  shirtColorMenu = registrationForm.querySelector('#colors-js-puns');
-    
+
     /** The list of activities */
     var activitiesList = registrationForm.querySelector('.activities');
 
