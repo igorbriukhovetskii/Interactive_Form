@@ -15,6 +15,9 @@ window.initializeValidation = (function () {
     /** A label for the email input text field */
     var emailFieldLabel = registrationForm.querySelector('label[for="mail"');
 
+    /** A list of payment methods */
+    var paymentOptionsList = registrationForm.querySelector('#payment');
+
     /** A credit card section */
     var creditCardInfo = registrationForm.querySelector('#credit-card');
 
@@ -106,6 +109,13 @@ window.initializeValidation = (function () {
         }
     };
 
+    /** Check if any payment option selected */
+    var isPaymentMethod = function () {
+      if (paymentOptionsList.value === 'select_method') {
+          error = true;
+      }
+    };
+
     /** Function checks the 'Credit Card Number' input field for errors */
     var creditCardNumberFieldRealTimeValidation = function () {
         if (creditCardNumberField.value.length < 13 || creditCardNumberField.value.length > 16){
@@ -176,9 +186,12 @@ window.initializeValidation = (function () {
         error = false;
         nameFieldRealTimeValidation();
         emailFieldRealTimeValidation();
-        creditCardNumberFieldRealTimeValidation();
-        cvvFieldRealTimeValidation();
-        zipFieldRealTimeValidation();
+        isPaymentMethod();
+        if (paymentOptionsList.value === 'credit card') {
+            creditCardNumberFieldRealTimeValidation();
+            cvvFieldRealTimeValidation();
+            zipFieldRealTimeValidation();
+        }
         activitiesRealTimeValidation();
         if (error === false) {
             registrationForm.submit();
