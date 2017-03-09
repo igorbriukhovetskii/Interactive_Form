@@ -164,15 +164,16 @@ window.initializeValidation = (function () {
      */
     var activitiesRealTimeValidation = function () {
         for (var i = 0; i < activities.length; i++) {
-            if (activities[i].checked === true) {
+            if (activities[i].checked === false) {
+                activitiesListHeader.innerText = 'Please select at least one activity';
+                activitiesListHeader.style.color = 'red';
+                if (i === activities.length - 1) {
+                    error = true;
+                }
+            } else {
                 activitiesListHeader.innerText = 'Register for Activities';
                 activitiesListHeader.style.color = 'inherit';
                 return;
-            } else {
-                activitiesListHeader.innerText = 'Please select at least one activity';
-                activitiesListHeader.style.color = 'red';
-                // errors[5] = 1;
-                error = true;
             }
         }
     };
